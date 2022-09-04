@@ -1,25 +1,51 @@
-// let testInfo = [
-//   { name: "István", status: "Boss" },
-//   { name: "Péter", status: "worker" },
-//   { name: "Sándor", status: "worker" },
-// ];
 
-// const localStorage = {
-//   setItem: function (key, value) {
-//     value = JSON.stringify(value);
-//     console.log(value);
-//     localStorage.setItem(key, value);
-//   },
-//   getItem(key) {
-//     const value = localStorage.getItem(key);
-//     return JSON.parse(value);
-//   },
-//   removeItem(key) {
-//     localStorage.removeItem(key);
-//   },
-// };
+/*
+let todoItems = [
+   { title: "work", isDone: false },
+   { title: "lunch", isDone: true },
+   { title: "shopping", isDone: true }
+ ];
+*/
+function testTodoItems() {
+  todoItems = [
+    { title: "work", isDone: false },
+    { title: "lunch", isDone: true },
+    { title: "shopping", isDone: true }
+  ]
+  updateLocalStorage();
+}
 
-//console.log(localStorage.getItem("testelek2"));
+
+let todoItems = JSON.parse(localStorage.getItem('todoItems'));
+
+function updateLocalStorage() {
+  localStorage.setItem('todoItems', JSON.stringify(todoItems));
+}
+
+function renderTodoItems() {
+  const todoListCompleted = document.querySelector('.toDo__list__completed');
+  todoListCompleted.innerHTML = '';
+  const todoListNotCompleted = document.querySelector('.toDo__list__notCompleted');
+  todoListNotCompleted.innerHTML = '';
+
+  for (let i = 0; i < todoItems.length; i++) {
+    if (todoItems[i].isDone) {
+      todoListCompleted.innerHTML += ` <div class="toDo__list__Completed--item">
+                      <div><input class="checker" checked type="checkbox" name="checker"></div>
+                      <div class="toDo__item__Completed--text"><p>${todoItems[i].title}</p></div>
+                      </div>`
+    } else {
+      todoListNotCompleted.innerHTML += ` <div class="toDo__list__notCompleted--item">
+                      <div><input class="checker" type="checkbox" name="checker"></div>
+                      <div class="toDo__item__notCompleted--text"><p>${todoItems[i].title}</p></div>
+                      <div><button class="trashButton" onclick="removeTodoItem(${i})"><i class="fa-solid fa-trash"></i></button></div>
+                      </div>`;
+
+    }
+  }
+}
+
+renderTodoItems()
 
 const showDate = document.querySelector(".date__dateTime");
 const showDateDay = document.querySelector(".date__day");
@@ -57,12 +83,12 @@ refreshDate();
 plusButton.addEventListener("click", clickAddButton);
 
 function clickAddButton() {
-  inputText = input.value;
-  console.log(`clickre látja a ${inputText}-t`);
-  if (inputText === "") {
+  console.log(`clickre látja a ${input.value}-t`);
+  if (input.value === "") {
     return;
-  } else if (inputText !== "") {
-    removeAndPushInput();
+  } else if (input.value !== "") {
+    removeAndPushInput(input.value);
+    input.value = "";
     counter++;
     console.log(`a számláló ${counter}, ami látszódik talán`);
     counterRefresh(counter); // ez itt valamiért nem működik
@@ -71,20 +97,19 @@ function clickAddButton() {
 
 //pusholom az inputot és kitörlöm, ahonnan jön
 
-function removeAndPushInput() {
+function removeAndPushInput(inputText) {
   console.log(`megvan a berít szöveg: ${inputText}`);
-  (function createtoDO() {
-    console.log(`az új div is elkészül a ${inputText}-al`);
-    toDoList.innerHTML += ` <div class="toDo__list__notCompleted--item">
-                            <div><input class="checker" type="radio" name="checker" id="checker"></div>
-                            <div class="toDo__item__notCompleted--text"><p>${inputText}</p></div>
-                            <div><button class="trashButton"><i class="fa-solid fa-trash"></i></button></div>
-                            </div>`;
-    const checker = document.querySelector(".checker");
-  })();
-  (function removeInput() {
-    input.value = "";
-  })();
+  todoItems.push({ title: inputText, isDone: false })
+  renderTodoItems()
+  updateLocalStorage()
+
+
+
 }
 
+function removeTodoItem(i) {
+  todoItems.splice(i, 1)
+  renderTodoItems()
+  updateLocalStorage()
+}
 //checker figyelő, ami átrakja az elvégzettek közé a feladatot
