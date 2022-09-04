@@ -20,14 +20,16 @@ body {
   width: 40rem;
 }
 
-.toDo__list__notCompleted {
+.toDo__list__notCompleted,
+.toDo__list__completed {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.toDo__list__notCompleted--item {
+.toDo__list__notCompleted--item,
+.toDo__list__Completed--item {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -35,7 +37,8 @@ body {
   gap: 3em;
 }
 
-.toDo__item__notCompleted--text {
+.toDo__item__notCompleted--text,
+.toDo__item__Completed--text {
   font-size: 2em;
 }
 
@@ -77,65 +80,7 @@ h3 {
 .fa-plus {
   font-size: 3em;
 }
-/* 
 
-.screen {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: end;
-    background-color: rgb(233, 236, 239);
-    border-radius: .25rem;
-    padding: 1rem 1rem;
-    font-size: 1.2rem;
-    margin: 2rem 0;
-    height: 3rem;
-    width: 35rem;
-    font-size: 5.11rem;
-    }
-
-.screen p {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: end;
-        white-space: nowrap;
-        width: 40rem;
-        height: 5rem;
-        
-        overflow: hidden;
-        text-overflow: clip;
-        
-    }
-
-.calculator__buttons {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content:space-around;
-    background-color: #ffffff;
-    border-radius: .25rem;
-    width: 30rem;
-    }
-
-button {
-    font-size: 3rem;
-    text-align: center;
-    width: 8rem;
-    height: 5rem;
-    margin: 0.5rem;
-    cursor: pointer;
-    font-family: digital;
+.turnedOff {
+  display: none;
 }
-
-.button__equal {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 5rem;
-    height: 23rem;
-    width: 8rem;
-    background-color: #4d90fd;
-    color: #ffffff
-} */

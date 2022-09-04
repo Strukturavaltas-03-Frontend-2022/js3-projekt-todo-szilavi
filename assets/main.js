@@ -1,51 +1,32 @@
-
-/*
-let todoItems = [
-   { title: "work", isDone: false },
-   { title: "lunch", isDone: true },
-   { title: "shopping", isDone: true }
- ];
-*/
-function testTodoItems() {
-  todoItems = [
-    { title: "work", isDone: false },
-    { title: "lunch", isDone: true },
-    { title: "shopping", isDone: true }
-  ]
-  updateLocalStorage();
-}
-
-
-let todoItems = JSON.parse(localStorage.getItem('todoItems'));
+let todoItems = JSON.parse(localStorage.getItem("todoItems"));
 
 function updateLocalStorage() {
-  localStorage.setItem('todoItems', JSON.stringify(todoItems));
+  localStorage.setItem("todoItems", JSON.stringify(todoItems));
 }
 
 function renderTodoItems() {
-  const todoListCompleted = document.querySelector('.toDo__list__completed');
-  todoListCompleted.innerHTML = '';
-  const todoListNotCompleted = document.querySelector('.toDo__list__notCompleted');
-  todoListNotCompleted.innerHTML = '';
+  const todoListCompleted = document.querySelector(".toDo__list__completed");
+  todoListCompleted.innerHTML = "";
+  const todoListNotCompleted = document.querySelector(
+    ".toDo__list__notCompleted"
+  );
+  todoListNotCompleted.innerHTML = "";
 
   for (let i = 0; i < todoItems.length; i++) {
     if (todoItems[i].isDone) {
       todoListCompleted.innerHTML += ` <div class="toDo__list__Completed--item">
-                      <div><input class="checker" checked type="checkbox" name="checker"></div>
+                      <div><input class="checker" checked disabled type="checkbox" name="checker"></div>
                       <div class="toDo__item__Completed--text"><p>${todoItems[i].title}</p></div>
-                      </div>`
+                      </div>`;
     } else {
       todoListNotCompleted.innerHTML += ` <div class="toDo__list__notCompleted--item">
-                      <div><input class="checker" type="checkbox" name="checker"></div>
+                      <div><input class="checker" type="checkbox" name="checker" onclick="completeTask(${i})"></div>
                       <div class="toDo__item__notCompleted--text"><p>${todoItems[i].title}</p></div>
                       <div><button class="trashButton" onclick="removeTodoItem(${i})"><i class="fa-solid fa-trash"></i></button></div>
                       </div>`;
-
     }
   }
 }
-
-renderTodoItems()
 
 const showDate = document.querySelector(".date__dateTime");
 const showDateDay = document.querySelector(".date__day");
@@ -53,12 +34,9 @@ const input = document.querySelector(".input__toDo");
 const plusButton = document.querySelector(".plusButton");
 const toDoList = document.querySelector(".toDo__list__notCompleted");
 const toDoCounter = document.querySelector(".toDoCounter");
-let counter = 0;
-
-//ezt itt gyors létrehozta, mai a számláló értéket belerakja a html-be
-function counterRefresh(counter) {
-  toDoCounter.textContent = "counter";
-} // valamiért nem működik
+const showHideButton = document.querySelector(".buttons__showCompleteButton");
+const completedTitle = document.querySelector(".preToDo__list__Completed");
+const clearButton = document.querySelector(".buttons__clearButton");
 
 //Dátum mutatása
 
@@ -89,9 +67,7 @@ function clickAddButton() {
   } else if (input.value !== "") {
     removeAndPushInput(input.value);
     input.value = "";
-    counter++;
-    console.log(`a számláló ${counter}, ami látszódik talán`);
-    counterRefresh(counter); // ez itt valamiért nem működik
+    counterRefresh(); // ez itt valamiért nem működik
   }
 }
 
@@ -99,17 +75,61 @@ function clickAddButton() {
 
 function removeAndPushInput(inputText) {
   console.log(`megvan a berít szöveg: ${inputText}`);
-  todoItems.push({ title: inputText, isDone: false })
-  renderTodoItems()
-  updateLocalStorage()
+  todoItems.push({ title: inputText, isDone: false });
+  renderTodoItems();
+  updateLocalStorage();
+  counterRefresh();
+}
 
+//complete egy task
 
-
+function completeTask(i) {
+  todoItems[i].isDone = true;
+  renderTodoItems();
+  updateLocalStorage();
+  counterRefresh();
 }
 
 function removeTodoItem(i) {
-  todoItems.splice(i, 1)
-  renderTodoItems()
-  updateLocalStorage()
+  todoItems.splice(i, 1);
+  renderTodoItems();
+  updateLocalStorage();
+  counterRefresh();
 }
 //checker figyelő, ami átrakja az elvégzettek közé a feladatot
+(function startTodoItems() {
+  if (!todoItems) {
+    todoItems = [{ title: "ellenőrizni a Todo-t :)", isDone: false }];
+    updateLocalStorage();
+  }
+})();
+
+function counterRefresh() {
+  completed = document.querySelectorAll(".toDo__list__Completed--item");
+  let counter = todoItems.length - completed.length;
+  toDoCounter.textContent = counter;
+}
+
+showHideButton.addEventListener("click", showHideCompleted);
+
+function showHideCompleted() {
+  completedTitle.classList.toggle("turnedOff");
+  document
+    .querySelector(".toDo__list__completed")
+    .classList.toggle("turnedOff");
+  if (showHideButton.textContent === "Hide Complete") {
+    showHideButton.textContent = "Show Complete";
+  } else {
+    showHideButton.textContent = "Hide Complete";
+  }
+}
+
+clearButton.addEventListener("click", deleteAllTask);
+
+function deleteAllTask() {
+  localStorage.clear();
+  document.location.reload();
+}
+
+renderTodoItems();
+counterRefresh();
