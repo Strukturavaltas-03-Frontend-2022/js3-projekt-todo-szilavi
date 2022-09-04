@@ -1,4 +1,10 @@
-let todoItems = JSON.parse(localStorage.getItem("todoItems"));
+let todoItems = [];
+
+if (JSON.parse(localStorage.getItem("todoItems") !== null)) {
+  todoItems = JSON.parse(localStorage.getItem("todoItems"));
+}
+
+//let todoItems = JSON.parse(localStorage.getItem("todoItems" || []));
 
 function updateLocalStorage() {
   localStorage.setItem("todoItems", JSON.stringify(todoItems));
@@ -12,18 +18,20 @@ function renderTodoItems() {
   );
   todoListNotCompleted.innerHTML = "";
 
-  for (let i = 0; i < todoItems.length; i++) {
-    if (todoItems[i].isDone) {
-      todoListCompleted.innerHTML += ` <div class="toDo__list__Completed--item">
+  if (todoItems !== null) {
+    for (let i = 0; i < todoItems.length; i++) {
+      if (todoItems[i].isDone) {
+        todoListCompleted.innerHTML += ` <div class="toDo__list__Completed--item">
                       <div><input class="checker" checked disabled type="checkbox" name="checker"></div>
                       <div class="toDo__item__Completed--text"><p>${todoItems[i].title}</p></div>
                       </div>`;
-    } else {
-      todoListNotCompleted.innerHTML += ` <div class="toDo__list__notCompleted--item">
+      } else {
+        todoListNotCompleted.innerHTML += ` <div class="toDo__list__notCompleted--item">
                       <div><input class="checker" type="checkbox" name="checker" onclick="completeTask(${i})"></div>
                       <div class="toDo__item__notCompleted--text"><p>${todoItems[i].title}</p></div>
                       <div><button class="trashButton" onclick="removeTodoItem(${i})"><i class="fa-solid fa-trash"></i></button></div>
                       </div>`;
+      }
     }
   }
 }
@@ -37,6 +45,7 @@ const toDoCounter = document.querySelector(".toDoCounter");
 const showHideButton = document.querySelector(".buttons__showCompleteButton");
 const completedTitle = document.querySelector(".preToDo__list__Completed");
 const clearButton = document.querySelector(".buttons__clearButton");
+const percent = document.querySelector(".completed__percent");
 
 //Dátum mutatása
 
@@ -97,17 +106,27 @@ function removeTodoItem(i) {
   counterRefresh();
 }
 //checker figyelő, ami átrakja az elvégzettek közé a feladatot
-(function startTodoItems() {
-  if (!todoItems) {
-    todoItems = [{ title: "ellenőrizni a Todo-t :)", isDone: false }];
-    updateLocalStorage();
-  }
-})();
+// (function startTodoItems() {
+//   if (!todoItems) {
+//     todoItems = [{ title: "ellenőrizni a Todo-t :)", isDone: false }];
+//     updateLocalStorage();
+//   }
+// })();
 
 function counterRefresh() {
   completed = document.querySelectorAll(".toDo__list__Completed--item");
-  let counter = todoItems.length - completed.length;
-  toDoCounter.textContent = counter;
+  pending = document.querySelectorAll(".toDo__list__notCompleted--item");
+  if (todoItems !== null) {
+    let counter = todoItems.length - completed.length;
+    toDoCounter.textContent = counter;
+    if (completed.length + pending.length === 0) {
+      percent.innerHTML = "100%";
+    } else {
+      completionPercentage =
+        (completed.length / (pending.length + completed.length)) * 100;
+      percent.innerHTML = Math.trunc(completionPercentage) + "%";
+    }
+  } else return;
 }
 
 showHideButton.addEventListener("click", showHideCompleted);
