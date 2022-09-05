@@ -7,10 +7,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(#5a5a5a, #a6a6a6);
 }
 
 .to-do__container {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   justify-content: start;
@@ -18,6 +20,7 @@ body {
   box-shadow: 2px 0 5px 5px #888888;
   height: 60rem;
   width: 40rem;
+  background-color: #ececec;
 }
 
 .toDo__list__notCompleted,
@@ -25,25 +28,69 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  height: 20em;
 }
 
 .toDo__list__notCompleted--item,
 .toDo__list__Completed--item {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 3em;
+  background-color: rgba(105, 105, 105, 0.2);
+  width: 30em;
+  margin-bottom: 0.5em;
+  height: 2em;
+  padding: 0.5em;
+  border: solid 0.1em rgba(105, 105, 105, 0.8);
+  background: linear-gradient(0.25turn, #9a9a9a, #a6a6a6);
+}
+
+.toDo__list__Completed--item {
+  opacity: 0.6;
+}
+
+.hidden {
+  display: none;
+}
+
+.toDo__list__notCompleted--item:hover .hidden {
+  display: block;
+}
+
+.trashButton {
+  position: absolute;
+  right: 1em;
+  bottom: 0.8em;
+  background-color: red;
+  border: none;
+  height: 2em;
+  width: 2em;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.checker {
+  height: 2em;
+  width: 2em;
 }
 
 .toDo__item__notCompleted--text,
 .toDo__item__Completed--text {
-  font-size: 2em;
+  font-size: 1.5em;
+}
+
+.toDo__item__Completed--text {
+  text-decoration: line-through;
 }
 
 h3 {
   font-size: 2em;
+  align-self: flex-start;
+  margin-left: 2.2em;
 }
 
 .toDo__item__notCompleted,
@@ -53,12 +100,14 @@ h3 {
 
 .buttons {
   margin-top: 2em;
+  margin-bottom: 1em;
 }
 
 .date {
-  font-size: 2.5em;
+  font-size: 2em;
   margin: 1em;
   align-self: flex-start;
+  font-family: "Oswald", sans-serif;
 }
 
 .date p {
@@ -73,7 +122,7 @@ h3 {
 
 .input__toDo {
   height: 3em;
-  width: 35rem;
+  width: 30rem;
   font-size: 1em;
 }
 
@@ -81,6 +130,53 @@ h3 {
   font-size: 3em;
 }
 
+.plusButton {
+  width: 5em;
+  height: 4em;
+  margin-left: 1em;
+  color: #ffffff;
+  background: linear-gradient(#a6a6a6, #5a5a5a);
+  border-radius: 10%;
+}
+
+.buttons {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  position: absolute;
+  bottom: 1em;
+  width: 40em;
+}
+
+.buttons__showCompleteButton,
+.buttons__clearButton {
+  width: 10em;
+  height: 3em;
+  cursor: pointer;
+  background: linear-gradient(#a6a6a6, #5a5a5a);
+  color: #ffffff;
+  font-size: 1em;
+  border-radius: 10%;
+}
+
 .turnedOff {
   display: none;
+}
+
+.fade {
+  animation: fade 0.5s;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }

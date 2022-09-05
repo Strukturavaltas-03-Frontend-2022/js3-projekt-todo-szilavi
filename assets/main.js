@@ -29,7 +29,7 @@ function renderTodoItems() {
         todoListNotCompleted.innerHTML += ` <div class="toDo__list__notCompleted--item">
                       <div><input class="checker" type="checkbox" name="checker" onclick="completeTask(${i})"></div>
                       <div class="toDo__item__notCompleted--text"><p>${todoItems[i].title}</p></div>
-                      <div><button class="trashButton" onclick="removeTodoItem(${i})"><i class="fa-solid fa-trash"></i></button></div>
+                      <div><button class="trashButton hidden fade" onclick="removeTodoItem(${i})"><i class="fa-solid fa-trash"></i></button></div>
                       </div>`;
       }
     }
@@ -73,11 +73,14 @@ function clickAddButton() {
   console.log(`clickre látja a ${input.value}-t`);
   if (input.value === "") {
     return;
-  } else if (input.value !== "") {
+  } else if (
+    input.value !== "" &&
+    toDoCounter.textContent !== "You have 6 pending items"
+  ) {
     removeAndPushInput(input.value);
     input.value = "";
     counterRefresh(); // ez itt valamiért nem működik
-  }
+  } else alert("To much pending. Do something!");
 }
 
 //pusholom az inputot és kitörlöm, ahonnan jön
@@ -87,6 +90,7 @@ function removeAndPushInput(inputText) {
   todoItems.push({ title: inputText, isDone: false });
   renderTodoItems();
   updateLocalStorage();
+  effect();
   counterRefresh();
 }
 
@@ -94,9 +98,14 @@ function removeAndPushInput(inputText) {
 
 function completeTask(i) {
   todoItems[i].isDone = true;
-  renderTodoItems();
-  updateLocalStorage();
-  counterRefresh();
+  completedTasksNumber = document.querySelectorAll(
+    ".toDo__list__Completed--item"
+  );
+  if (completedTasksNumber.length < 6) {
+    renderTodoItems();
+    updateLocalStorage();
+    counterRefresh();
+  } else alert("To much Completed task. Pls Clear All!!");
 }
 
 function removeTodoItem(i) {
@@ -116,9 +125,13 @@ function removeTodoItem(i) {
 function counterRefresh() {
   completed = document.querySelectorAll(".toDo__list__Completed--item");
   pending = document.querySelectorAll(".toDo__list__notCompleted--item");
+  pendingString = document.querySelector(".pendingString");
   if (todoItems !== null) {
     let counter = todoItems.length - completed.length;
-    toDoCounter.textContent = counter;
+    toDoCounter.textContent = `You have ${counter} pending items`;
+    if (counter === 0) {
+      toDoCounter.textContent = `Party Time!!!!!!!!!!!!`;
+    }
     if (completed.length + pending.length === 0) {
       percent.innerHTML = "100%";
     } else {
@@ -126,7 +139,7 @@ function counterRefresh() {
         (completed.length / (pending.length + completed.length)) * 100;
       percent.innerHTML = Math.trunc(completionPercentage) + "%";
     }
-  } else return;
+  } else;
 }
 
 showHideButton.addEventListener("click", showHideCompleted);
@@ -148,6 +161,17 @@ clearButton.addEventListener("click", deleteAllTask);
 function deleteAllTask() {
   localStorage.clear();
   document.location.reload();
+}
+
+function effect() {
+  document
+    .querySelector(".toDo__list__notCompleted--item")
+    .classList.add("fade");
+  setTimeout(() => {
+    document
+      .querySelector(".toDo__list__notCompleted--item")
+      .classList.remove("fade");
+  }, 500);
 }
 
 renderTodoItems();
